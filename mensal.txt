@@ -1,0 +1,85 @@
+/******************************************************************************
+
+Welcome to GDB Online.
+  GDB online is an online compiler and debugger tool for C, C++, Python, PHP, Ruby, 
+  C#, OCaml, VB, Perl, Swift, Prolog, Javascript, Pascal, COBOL, HTML, CSS, JS
+  Code, Compile, Run and Debug online from anywhere in world.
+
+*******************************************************************************/
+#include <stdio.h>
+#include <stdlib.h>
+
+int main(){
+
+typedef struct {
+    void **dados;      // Ponteiro genérico para os elementos da fila
+    int inicio;        // Índice do primeiro elemento
+    int fim;           // Índice do último elemento
+    int tamanho;       // Quantidade atual de elementos na fila
+    int capacidade;    // Capacidade total da fila
+} Fila;
+
+// Função para criar a fila
+Fila* criarFila(int capacidadeInicial) {
+    Fila *fila = (Fila *) malloc(sizeof(Fila));
+    if (fila == NULL) return NULL;
+
+    fila->dados = (void **) malloc(sizeof(void*) * capacidadeInicial);
+    fila->inicio = 0;
+    fila->fim = -1;
+    fila->tamanho = 0;
+    fila->capacidade = capacidadeInicial;
+
+    return fila;
+}
+
+// Função para dobrar a capacidade da fila
+void dobrarCapacidade(Fila *fila) {
+    int novaCapacidade = fila->capacidade * 2;
+    void **novoDados = (void **) malloc(sizeof(void*) * novaCapacidade);
+    
+    // Copia os elementos para o novo array, mantendo a ordem circular
+    for (int i = 0; i < fila->tamanho; i++) {
+        novoDados[i] = fila->dados[(fila->inicio + i) % fila->capacidade];
+    }
+
+    free(fila->dados);  // Libera o array antigo
+    fila->dados = novoDados;
+    fila->capacidade = novaCapacidade;
+    fila->inicio = 0;
+    fila->fim = fila->tamanho - 1;
+}
+
+// Função para inserir um novo elemento na fila
+int inserirNaFila(Fila *fila, void *elemento) {
+    // Verifica se a fila está cheia
+    if (fila->tamanho == fila->capacidade) {
+        dobrarCapacidade(fila);
+    }
+
+    // Move o índice `fim` circularmente e insere o novo elemento
+    fila->fim = (fila->fim + 1) % fila->capacidade;
+    fila->dados[fila->fim] = elemento;
+    fila->tamanho++;
+    return 1;  // Sucesso
+}
+
+// Função para remover o elemento do início da fila
+void* removerDaFila(Fila *fila) {
+    if (fila->tamanho == 0) return NULL;  // Fila está vazia
+
+    void *elementoRemovido = fila->dados[fila->inicio];
+    fila->inicio = (fila->inicio + 1) % fila->capacidade;
+    fila->tamanho--;
+    return elementoRemovido;
+}
+
+// Função para limpar e liberar a fila
+void limparFila(Fila *fila) {
+    if (fila != NULL) {
+        free(fila->dados);
+        free(fila);
+    }
+}
+
+}
