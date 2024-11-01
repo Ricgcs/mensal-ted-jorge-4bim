@@ -1,1 +1,5 @@
-# mensal-ted-jorge-4bim
+#Nomes
+-Lucas Antoni Chaves Barbato
+-Lucas Kopezky Delanhese Gonçalves
+-Enzo Copia Caligiuri
+-Ricardo Gabriel camargo Soares
